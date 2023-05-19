@@ -18,6 +18,8 @@ public class Bookshelf : MonoBehaviour
 
             GameObject b = Instantiate(bookPrefab, transform);
             b.GetComponent<Book>().Init($"{Directory.GetCurrentDirectory()}/{file}");
+            //b.transform.position = new Vector3(i * 0.3f, 0, 0);
+            //b.transform.Rotate(0, 90, 90);
             b.transform.position = new Vector3(i * 2.6f, 0, 0);
             b.transform.Rotate(0, 180, 90);
 

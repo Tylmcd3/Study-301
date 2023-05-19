@@ -13,16 +13,14 @@ public class PdfUtils : MonoBehaviour
 	private void Start()
 	{
         singleton = this;
+        renderingSettings.ScaleMode = Apitron.PDF.Rasterizer.Configuration.ScaleMode.PreserveAspectRatio;
         StartCoroutine(ManagePdfReading());
-        StartCoroutine(ManageTextureWriting());
     }
 
 	
-    const int MAX_TEXTURE_FILL_PER_FRAME = 10000;
     static RenderingSettings renderingSettings = new RenderingSettings();
 
     Queue<PdfRasterizeInstructions> readQueue = new Queue<PdfRasterizeInstructions>();
-    Queue<PdfRasterizeInstructions> writeQueue = new Queue<PdfRasterizeInstructions>();
 
     public void GetPageAsTexture(Page page, ref Texture2D tex, Action<Texture2D> completeAction)
 	{
@@ -41,15 +39,23 @@ public class PdfUtils : MonoBehaviour
                 Page page = instructions.page;
                 Vector2Int textureSize = instructions.textureSize;
 
-                int maxRes = Mathf.Max(textureSize.x, textureSize.y);
-
-                //Calculate resolution
-                Vector2 fRes = (maxRes * new Vector2((float)page.Width, (float)page.Height) / Mathf.Max((float)page.Width, (float)page.Height));
-                Vector2Int res = new Vector2Int((int)fRes.x, (int)fRes.y);
-
                 //Open a new thread to rasterize the pdf
                 byte[] arr = null;
-                Thread t = new Thread(() => { arr = page.RenderAsBytes(res.x, res.y, renderingSettings); });
+                Thread t = new Thread(() => { 
+                    arr = page.RenderAsBytes(textureSize.x, textureSize.y, renderingSettings);
+
+                    int rowLength = textureSize.x * 4;
+                    Span<byte> tmp = new Span<byte>(new byte[rowLength]);
+                    for (int y = 0; y < textureSize.y/2; y++)
+					{
+                        int line = y * rowLength;
+                        int invLine = arr.Length - ((y + 1) * rowLength);
+
+                        arr.AsSpan().Slice(line, rowLength).CopyTo(tmp);
+                        arr.AsSpan().Slice(invLine, rowLength).CopyTo(arr.AsSpan().Slice(line, rowLength));
+                        tmp.CopyTo(arr.AsSpan().Slice(invLine, rowLength));
+                    }
+                });
                 t.Start();
 
                 //wait until the thread finishes
@@ -61,96 +67,25 @@ public class PdfUtils : MonoBehaviour
                 if (t.ThreadState != ThreadState.Stopped)
                 {
                     Debug.LogError($"Thread for Changing pdf Page stopped early! Thread state {t.ThreadState}");
+                    yield return new WaitForEndOfFrame();
+                    continue;
                 }
-                else
-				{
-                    instructions.arr = arr;
-                    instructions.res = res;
-                    writeQueue.Enqueue(instructions);
-				}
+
+                instructions.tex.SetPixelData(arr, 0);
+                instructions.tex.Apply();
+                instructions.completeAction(instructions.tex);
             }
             else yield return new WaitForEndOfFrame();
 		}
     }
-
-    IEnumerator ManageTextureWriting()
-	{
-        while (true)
-		{
-            if (writeQueue.Count > 0)
-			{
-                float time = Time.realtimeSinceStartup;
-
-                PdfRasterizeInstructions instructions = writeQueue.Dequeue();
-
-                Vector2Int textureSize = instructions.textureSize;
-                Action<Texture2D> completeAction = instructions.completeAction;
-                byte[] arr = instructions.arr;
-                Vector2Int res = instructions.res;
-                Texture2D tex = instructions.tex;
-                //tex.Reinitialize(textureSize.x, textureSize.y);
-
-
-                Vector2Int pageCornerCoords = (textureSize - res) / 2;
-
-                Color[] img = new Color[textureSize.x * textureSize.y];
-
-                for (int i = 0; i < img.Length; i++)
-                {
-                    int texX = i % textureSize.x, texY = i / textureSize.x;
-                    bool inXBounds = texX > pageCornerCoords.x && texX < pageCornerCoords.x + res.x;
-                    bool inYBounds = texY > pageCornerCoords.y && texY < pageCornerCoords.y + res.y;
-
-                    if (inXBounds && inYBounds)
-					{
-                        int pageX = texX - pageCornerCoords.x, pageY = res.y - (texY - pageCornerCoords.y) - 1;
-                        int a = (pageX + res.x * pageY)*4;
-
-                        img[i] = new Color(
-                        arr[a+2]/127f, //R
-                        arr[a+1]/127f, //G
-                        arr[a]/127f //B
-                        );
-					}
-                    else
-					{
-                        img[i] = Color.gray;
-                    }
-
-                    //Time management
-                    if ((i + 1) % MAX_TEXTURE_FILL_PER_FRAME == 0)
-                    {
-                        if (time - Time.realtimeSinceStartup > 0.01)
-                            Debug.Log(time - Time.realtimeSinceStartup);
-                        time = Time.realtimeSinceStartup;
-                        yield return new WaitForEndOfFrame();
-                    }
-                }
-
-                yield return new WaitForEndOfFrame();
-
-                tex.SetPixels(img);
-                tex.Apply();
-
-                completeAction(tex);
-
-                yield return new WaitForEndOfFrame();
-
-                GC.Collect();
-            }
-            yield return new WaitForEndOfFrame();
-        }
-	}
 
 
     struct PdfRasterizeInstructions
 	{
         public Page page;
         public Vector2Int textureSize;
-        public Vector2Int res;
         public Texture2D tex;
         public Action<Texture2D> completeAction;
-        public byte[] arr;
     }
 
 

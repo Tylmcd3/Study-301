@@ -29,7 +29,7 @@ public class PdfNavigator : MonoBehaviour
         FileStream fs = new FileStream(path, FileMode.Open);
         doc = new Document(fs, EngineSettings.GlobalSettings);
 
-        tex = new Texture2D(MAX_RES, MAX_RES);
+        tex = new Texture2D(MAX_RES, MAX_RES, TextureFormat.BGRA32, true);
         GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", tex);
 
         GoToPage(currentPage);
