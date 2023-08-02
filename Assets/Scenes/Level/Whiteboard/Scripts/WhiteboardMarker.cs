@@ -67,7 +67,7 @@ public class WhiteboardMarker : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    _whiteboard.tex.SetPixels(x, y, _penSize, _penSize, _colours);
+                    /*_whiteboard.tex.SetPixels(x, y, _penSize, _penSize, _colours);
 
                     for (float f = 0.01f; f < 1.00f; f += 0.01f)
                     {
@@ -78,7 +78,9 @@ public class WhiteboardMarker : MonoBehaviour
 
                     transform.rotation = _lastTouchRot;
 
-                    _whiteboard.tex.Apply();
+                    _whiteboard.tex.Apply();*/
+                    _whiteboard.Draw(x, y, _penSize, _colours, _lastTouchPos);
+                    transform.rotation = _lastTouchRot;
                 }
                 _lastTouchPos = new Vector2(x, y);
                 _lastTouchRot = transform.rotation;
@@ -103,6 +105,4 @@ public class WhiteboardMarker : MonoBehaviour
     {
         Draw();
     }
-
-    
 }

@@ -13,6 +13,9 @@ public class Whiteboard : MonoBehaviour
 
     void Start()
     {
+        //Keyframing setup
+        drawFramer = new STUDYKeyframer(name, nameof(Draw), (object p) => Draw(p as DrawParams), typeof(DrawParams));
+
         var r = GetComponent<Renderer>();
         var m = new Material(placeholderTest);
         if(isRunningUnity){
@@ -60,6 +63,25 @@ public class Whiteboard : MonoBehaviour
             Debug.Log("Something has gone wrong");
         }
 
+    }
+
+    STUDYKeyframer drawFramer;
+    class DrawParams { public int x, y, penSize; public Color[] colours; public Vector2 lastTouchPos; }
+    void Draw(DrawParams p) { Draw(p.x, p.y, p.penSize, p.colours, p.lastTouchPos); }
+    public void Draw(int x, int y, int penSize, Color[] colours, Vector2 lastTouchPos)
+	{
+        //Debug.Log($"{x}, {y}, {penSize}, {colours}, {lastTouchPos}");
+
+        drawFramer.AddFrame(new DrawParams { x = x, y = y, penSize = penSize, colours = colours, lastTouchPos = lastTouchPos });
+        tex.SetPixels(x, y, penSize, penSize, colours);
+
+        for (float f = 0.01f; f < 1.00f; f += 0.01f)
+        {
+            var lerpX = (int)Mathf.Lerp(lastTouchPos.x, x, f);
+            var lerpY = (int)Mathf.Lerp(lastTouchPos.y, y, f);
+            tex.SetPixels(lerpX, lerpY, penSize, penSize, colours);
+        }
+        tex.Apply();
     }
 
 }
