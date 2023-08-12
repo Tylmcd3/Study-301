@@ -16,7 +16,23 @@ public class TestingScriptDeleteMe : MonoBehaviour
         runOnce = true;
     }
 
-    IEnumerator DrawRoutine()
+    public KeyCode recordStartKey = KeyCode.F6;
+    public KeyCode replayKey = KeyCode.F7;
+
+	private void Update()
+	{
+        if (Input.GetKeyDown(recordStartKey))
+		{
+            RecordingMaster.SetRecordStartTime(Time.realtimeSinceStartup);
+		}
+		if (Input.GetKeyDown(replayKey))
+		{
+            RecordingMaster.CloseRecording();
+            RecordingMaster.Replay();
+        }
+	}
+
+	IEnumerator DrawRoutine()
 	{
         yield return new WaitForSeconds(1.0f);
         Vector2 last = new Vector2(100, 100);
@@ -31,7 +47,7 @@ public class TestingScriptDeleteMe : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        RecordingMaster.CloseRecording();
-        RecordingMaster.Replay();
+        //RecordingMaster.CloseRecording();
+        //RecordingMaster.Replay();
 	}
 }
