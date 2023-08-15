@@ -23,6 +23,7 @@ public class WhiteboardEraser : MonoBehaviour
 
     private RaycastHit _touchTop;
     private RaycastHit _touchBottom;
+    private DrawingTablet _tablet;
     private Whiteboard _whiteboard;
     private Vector2 _touchPosTop;
     private Vector2 _touchPosBottom;
@@ -60,27 +61,29 @@ public class WhiteboardEraser : MonoBehaviour
                     _whiteboard = _touchTop.transform.GetComponent<Whiteboard>();
                 }
 
+                Vector2 TexSize = _whiteboard.getTexSize();
+
                 _touchPosTop = new Vector2(_touchTop.textureCoord.x, _touchTop.textureCoord.y);
                 _touchPosBottom = new Vector2(_touchBottom.textureCoord.x, _touchBottom.textureCoord.y);
 
-                var x1 = (int)(_touchPosTop.x * _whiteboard.textureSize.x - (_penSize / 2));
-                var y1 = (int)(_touchPosTop.y * _whiteboard.textureSize.y - (_penSize / 2));
+                var x1 = (int)(_touchPosTop.x * TexSize.x - (_penSize / 2));
+                var y1 = (int)(_touchPosTop.y * TexSize.y - (_penSize / 2));
 
-                var x2 = (int)(_touchPosBottom.x * _whiteboard.textureSize.x - (_penSize / 2));
-                var y2 = (int)(_touchPosBottom.y * _whiteboard.textureSize.y - (_penSize / 2));
+                var x2 = (int)(_touchPosBottom.x * TexSize.x - (_penSize / 2));
+                var y2 = (int)(_touchPosBottom.y * TexSize.y - (_penSize / 2));
 
                 
                 if (x1 < 0) x1 = 0;
-                else if(x1 > _whiteboard.textureSize.x) x1 = (int)_whiteboard.textureSize.x;
+                else if(x1 > TexSize.x) x1 = (int)TexSize.x;
 
                 if (y1 < 0) y1 = 0;
-                else if (y1 > _whiteboard.textureSize.y) y1 = (int)_whiteboard.textureSize.y;
+                else if (y1 > TexSize.y) y1 = (int)TexSize.y;
 
                 if (x2 < 0) x2 = 0;
-                else if (x2 > _whiteboard.textureSize.x) x2 = (int)_whiteboard.textureSize.x;
+                else if (x2 > TexSize.x) x2 = (int)TexSize.x;
 
                 if (y2 < 0) y2 = 0;
-                else if (y2 > _whiteboard.textureSize.y) y2 = (int)_whiteboard.textureSize.y;
+                else if (y2 > TexSize.y) y2 = (int)TexSize.y;
 
                 if (x1 < x2) { var temp = x2; x2 = x1; x1 = temp; }
                 if (y1 < y2) { var temp = y2; y2 = y1; y1 = temp; }
@@ -88,21 +91,8 @@ public class WhiteboardEraser : MonoBehaviour
                 if (_touchedLastFrame)
                 {
                     var eraseSize = new Vector2(x1-x2, y1-y2);
-                    
-                    if(TestColourToggle) _colours = Enumerable.Repeat(TestColour, (int)(eraseSize.x * eraseSize.y)).ToArray();
-                    else _colours = Enumerable.Repeat(_whiteboard.Colour, (int)(eraseSize.x * eraseSize.y)).ToArray();
-                    _whiteboard.tex.SetPixels(x2,y2, Math.Abs((int)eraseSize.x), Math.Abs((int)eraseSize.y), _colours);
-
-
-                    for (float f = 0.01f; f < 1.00f; f += 0.01f)
-                    {
-                        var lerpX = (int)Mathf.Lerp(_lastTouchPos.x, x2, f);
-                        var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y2, f);
-                        _whiteboard.tex.SetPixels(lerpX, lerpY, (int)eraseSize.x, (int)eraseSize.y, _colours);
-                    }
-
+                    _whiteboard.Erase(x2,y2, Math.Abs((int)eraseSize.x), Math.Abs((int)eraseSize.y), _lastTouchPos);
                     transform.rotation = _lastTouchRot;
-                    _whiteboard.tex.Apply();
                 }
                 _lastTouchPos = new Vector2(x2, y2);
                 _lastTouchRot = transform.rotation;

@@ -15,14 +15,14 @@ MonoBehaviour:
   m_GroupName: Classroom_Levels
   m_Data:
     m_SerializedData: []
-  m_GUID: 585f910f67490294690313d3e40ef2db
+  m_GUID: 1fb8375ae882ea041853ef859a993fcf
   m_SerializeEntries:
   - m_GUID: 798891a30ea43d54e8bde50b8ff508c2
     m_Address: Level/Classroom
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
-  m_Settings: {fileID: 11400000, guid: 155f9f2d8e2c01546b0f636f43953407, type: 2}
+  m_Settings: {fileID: 11400000, guid: e12627fd277fbcc45b3b88c2cda46f82, type: 2}
   m_SchemaSet:
     m_Schemas:
     - {fileID: 11400000, guid: f875b842615eed44483e61e9af66da0e, type: 2}

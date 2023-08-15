@@ -15,10 +15,10 @@ MonoBehaviour:
   m_GroupName: Classroom_VFXs
   m_Data:
     m_SerializedData: []
-  m_GUID: 097e9205121ad174288e08819864a4de
+  m_GUID: 88636a9cb8ba1364a9030e1bc5a8c551
   m_SerializeEntries: []
   m_ReadOnly: 0
-  m_Settings: {fileID: 11400000, guid: 155f9f2d8e2c01546b0f636f43953407, type: 2}
+  m_Settings: {fileID: 11400000, guid: e12627fd277fbcc45b3b88c2cda46f82, type: 2}
   m_SchemaSet:
     m_Schemas:
     - {fileID: 11400000, guid: 57b521ce210ce7346bb2c32a1cf0343e, type: 2}

@@ -25,7 +25,8 @@ MonoBehaviour:
   _unlockable: 0
   _redacted: 0
   _pallet: {fileID: 11400000, guid: 60d78c4aabf4a7e40ab02538939ab1a1, type: 2}
-  _tags: []
+  _tags:
+  - Whiteboard
   _mainAsset:
     _assetGUID: 798891a30ea43d54e8bde50b8ff508c2
     _editorAssetChanged: 0
