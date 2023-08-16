@@ -55,8 +55,8 @@ public class WhiteboardMarker : MonoBehaviour
                 
                 _touchPos = new Vector2(_touch.textureCoord.x, _touch.textureCoord.y);
 
-                var x = (int)(_touchPos.x * _whiteboard.tex.width - (_penSize / 2));
-                var y = (int)(_touchPos.y * _whiteboard.tex.height - (_penSize / 2));
+                var x = (int)(_touchPos.x * _whiteboard.getTexSize().x - (_penSize / 2));
+                var y = (int)(_touchPos.y * _whiteboard.getTexSize().y - (_penSize / 2));
 
 
                 if (y < 0 || y > _whiteboard.tex.height || x < 0 || x > _whiteboard.tex.width) return;

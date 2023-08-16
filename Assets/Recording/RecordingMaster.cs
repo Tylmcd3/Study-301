@@ -104,6 +104,8 @@ public class RecordingMaster: MonoBehaviour
 
     public static void CloseRecording()
 	{
+        //Debug.LogWarning("Closing Recording");
+
         StringBuilder sb = new StringBuilder();
 
         sb.Append(JsonUtility.ToJson(new RecordingMetadata
@@ -130,12 +132,15 @@ public class RecordingMaster: MonoBehaviour
 
     public static void Replay()
 	{
+        //Debug.LogWarning("Moving to Replay");
         SceneManager.LoadScene(1);
         state = State.REPLAYING;
 	}
 
     IEnumerator ReplayRecording()
     {
+        //Debug.LogWarning("Replay Begun");
+
         yield return new WaitForEndOfFrame();
         string record = tmp_string;
 
@@ -164,7 +169,7 @@ public class RecordingMaster: MonoBehaviour
         }
 
         //Set up video capture
-        var settings = new VideoEncoderSettings(width: 1920, height: 1080, framerate: 30, codec: VideoCodec.H264);
+        var settings = new VideoEncoderSettings(width: 1080, height: 720, framerate: 30, codec: VideoCodec.H264);
         settings.EncoderPreset = EncoderPreset.Fast;
         settings.CRF = 17;
 
@@ -183,6 +188,7 @@ public class RecordingMaster: MonoBehaviour
                     //Capture Frame
                     cam.Render();
                     RenderTexture.active = rt;
+                    VerticallyFlipRenderTexture(rt);
                     writeTex.ReadPixels(new Rect(0, 0, 1080, 720), 0, 0);
                     
                     Span<byte> tex = writeTex.GetRawTextureData().AsSpan();
@@ -194,7 +200,17 @@ public class RecordingMaster: MonoBehaviour
                 FindKeyFramer(kvp.Key.owner, kvp.Key.method).Perform(kvp.Value);
             }
         }
-        
+
+        //Debug.LogWarning("Replay Finished");
+    }
+
+    //Courtesy of https://gist.github.com/mminer/816ff2b8a9599a9dd342e553d189e03f
+    public static void VerticallyFlipRenderTexture(RenderTexture target)
+    {
+        var temp = RenderTexture.GetTemporary(target.descriptor);
+        Graphics.Blit(target, temp, new Vector2(1, -1), new Vector2(0, 1));
+        Graphics.Blit(temp, target);
+        RenderTexture.ReleaseTemporary(temp);
     }
 
     public static STUDYKeyframer FindKeyFramer(string owner, string method)

@@ -44,8 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e1aab789ad26a4ab04dedebd97c316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showTestTex: 1
-  _tex: {fileID: 2800000, guid: 99bb073611c795642aab88e7fa9d0efe, type: 3}
-  testTex: {fileID: 2800000, guid: 99bb073611c795642aab88e7fa9d0efe, type: 3}
+  _tex: {fileID: 0}
   mat: {fileID: 2100000, guid: 7f19bbd9567ea9345a5d5a7fc8c4577f, type: 2}
   textureSize: {x: 2048, y: 1152}
