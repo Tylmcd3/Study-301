@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 [Elixir]
-
 /* 
  * This script is a mess at the moment, it needs a good refactor by either 
  *  - Being split into its own classes for the drawing guide and driving the drawing pad or 
@@ -14,24 +13,19 @@ public class DrawingTablet : MonoBehaviour
 {
     public GameObject DrawingDriver;
     private DrawingTextureManager _drawingDriver;
-
     public GameObject Display;
     [HideInInspector] public MeshRenderer _displayRen;
     public GameObject DrawingPad;
     [HideInInspector] public MeshRenderer _drawingPadRen;
-
     public Material TransparentMat;
-
     Material DrawingGuideMat;
     public Texture2D DrawingGuideTex;
-
-    public Rect DrawingPadView;
+    [HideInInspector] public Rect DrawingPadView;
     public Vector2 DrawingPadViewLastPos;
     public Rect ScreenView;
     public float DrawingPadScale;
     private Vector2 TexSize;
-
-    private RectInt lastGuideDraw;
+    private Rect lastGuideDraw;
     public KeyCode[] debugMoveKeys;
     public float debugMoveDist;
     public Vector2 getTexSize()
@@ -47,62 +41,30 @@ public class DrawingTablet : MonoBehaviour
     {
         _drawingDriver.Erase(x, y, sizeX, sizeX, _lastTouchPos);
     }
-    private RectInt CalculateBoundingBox(RectInt rectA, RectInt rectB)
+    private Rect CalculateBoundingBox(Rect rectA, Rect rectB)
     {
-        int minX = Mathf.Min(rectA.xMin, rectB.xMin);
-        int minY = Mathf.Min(rectA.yMin, rectB.yMin);
-        int maxX = Mathf.Max(rectA.xMax, rectB.xMax);
-        int maxY = Mathf.Max(rectA.yMax, rectB.yMax);
+        int minX = (int)Mathf.Min(rectA.xMin, rectB.xMin);
+        int minY = (int)Mathf.Min(rectA.yMin, rectB.yMin);
+        int maxX = (int)Mathf.Max(rectA.xMax, rectB.xMax);
+        int maxY = (int)Mathf.Max(rectA.yMax, rectB.yMax);
 
         int width = maxX - minX;
         int height = maxY - minY;
 
-        return new RectInt(minX, minY, width, height);
+        return new Rect(minX, minY, width, height);
     }
-    /*private Color[] ReplaceCertainPixels(Color[] colors, RectInt BoundingBox, RectInt guide)
-    {
-        Color[] _base = Enumerable.Repeat(new Color(0, 0, 0, 0), (int)(BoundingBox.width * BoundingBox.height)).ToArray();
-
-        for(int i = BoundingBox.yMin; i < BoundingBox.yMax; i++)
-        {
-            if (i < guide.yMin || i > guide.yMax) continue;
-            for (int j = BoundingBox.xMin; j < BoundingBox.xMax; j++)
-            {
-                if (j < guide.xMin || j > guide.xMax) continue;
-
-                int YBase = i - BoundingBox.yMin;
-                int YColors = i - guide.yMin;
-                int xBase = j - BoundingBox.xMin;
-                int xColors = j - guide.xMin;
-
-
-                Debug.Log($"I = {i}, j = {j}");
-                Debug.Log($"xBase = {xBase}, yBase = {YBase}")
-                _base[xBase + (BoundingBox.width * YBase)] = colors[YColors + (BoundingBox.width * xColors)];
-
-            }
-        }
-
-
-        return _base;
-
-    }*/
     void updateDrawingGuide()
     {
-        RectInt curr = new RectInt((int)(TexSize.x * DrawingPadView.x), (int)(TexSize.y * DrawingPadView.y), (int)(TexSize.x * DrawingPadView.width), (int)(TexSize.y * DrawingPadView.height));
+        Rect curr = new Rect((int)(TexSize.x * DrawingPadView.x), (int)(TexSize.y * DrawingPadView.y), (int)(TexSize.x * DrawingPadView.width), (int)(TexSize.y * DrawingPadView.height));
 
-        Debug.Log(curr);
-        RectInt change = CalculateBoundingBox(curr, lastGuideDraw);
+        Rect change = CalculateBoundingBox(curr, lastGuideDraw);
 
         Color _color = Color.blue;
         _color.a = .6f;
 
-        var _colours = Enumerable.Repeat(_color, curr.width * curr.height).ToArray();
+        var _colours = Enumerable.Repeat(_color, (int)(curr.width * curr.height)).ToArray();
 
-        //var _newCols = ReplaceCertainPixels(_colours, change, curr);
-
-        //DrawingGuideTex.SetPixels(change.x, change.y, change.width, change.height, _newCols);
-        DrawingGuideTex.SetPixels(curr.x, curr.y, curr.width, curr.height, _colours);
+        DrawingGuideTex.SetPixels((int)curr.x, (int)curr.y, (int)curr.width, (int)curr.height, _colours);
         DrawingGuideTex.Apply();
         lastGuideDraw = curr;
     }
@@ -120,32 +82,7 @@ public class DrawingTablet : MonoBehaviour
     }
     private void Update()
     {
-        /*if (DrawingPadView.position != DrawingPadViewLastPos)
-        {
-            updateDrawingView();
-            updateDrawingGuide();
-        }
-        if (Input.GetKeyDown(debugMoveKeys[0]))
-        {
-            DrawingPadView.y += debugMoveDist;
-
-            if (DrawingPadView.y >= 1 - DrawingPadView.height) DrawingPadView.y = 1 - DrawingPadView.height;
-        }
-        if (Input.GetKeyDown(debugMoveKeys[1]))
-        {
-            DrawingPadView.y -= debugMoveDist;
-            if (DrawingPadView.y < 0) DrawingPadView.y = 0;
-        }
-        if (Input.GetKeyDown(debugMoveKeys[2]))
-        {
-            DrawingPadView.x -= debugMoveDist;
-            if (DrawingPadView.x < 0) DrawingPadView.x = 0;
-        }
-        if (Input.GetKeyDown(debugMoveKeys[3]))
-        {
-            DrawingPadView.x += debugMoveDist;
-            if (DrawingPadView.x >= 1 - DrawingPadView.width) DrawingPadView.x = 1 - DrawingPadView.width;
-        }*/
+        
     }
 
     private void updateDrawingView()
@@ -170,7 +107,7 @@ public class DrawingTablet : MonoBehaviour
         TexSize = _drawingDriver.textureSize;
         DrawingGuideMat = SetupDrawingGuide();
 
-        lastGuideDraw = new RectInt((int)(TexSize.x * DrawingPadView.x), (int)(TexSize.y * DrawingPadView.y), (int)(TexSize.x * DrawingPadView.width), (int)(TexSize.y * DrawingPadView.height));
+        lastGuideDraw = new Rect((int)(TexSize.x * DrawingPadView.x), (int)(TexSize.y * DrawingPadView.y), (int)(TexSize.x * DrawingPadView.width), (int)(TexSize.y * DrawingPadView.height));
 
 
         _displayRen.materials = new Material[] { _drawingDriver.GetMat(), DrawingGuideMat };

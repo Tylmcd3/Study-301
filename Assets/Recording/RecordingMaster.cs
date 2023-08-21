@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public class STUDYKeyframer
+[Elixir]
+public class STUDYKeyframer : MonoBehaviour
 {
     Dictionary<float, object> frames;
     Action<object> playback;
@@ -38,9 +38,10 @@ public class STUDYKeyframer
         StringBuilder sb = new StringBuilder();
         foreach (KeyValuePair<float, object> kvp in frames)
 		{
-            sb.Append($"{JsonUtility.ToJson(new KeyFrameMetadata { time = kvp.Key, owner = owner, method = method})}\n");
-            sb.Append($"{JsonUtility.ToJson(kvp.Value)}\n");
-		}
+            sb.Append(JsonUtility.ToJson(new KeyFrameMetadata { time = kvp.Key, owner = owner, method = method})+"\n");
+            sb.Append(JsonUtility.ToJson(kvp.Value)+"\n");
+
+        }
         return sb.ToString();
 	}
 
@@ -63,7 +64,7 @@ public class STUDYKeyframer
         }
     }
 }
-
+[Elixir]
 public struct KeyFrameMetadata: IComparable<KeyFrameMetadata>
 {
     public float time;
@@ -75,12 +76,12 @@ public struct KeyFrameMetadata: IComparable<KeyFrameMetadata>
         return (time < obj.time) ? 0 : 1;
 	}
 }
-
+[Elixir]
 public struct RecordingMetadata
 {
     public float startTime;
 }
-
+[Elixir]
 public class RecordingMaster: MonoBehaviour
 {
     static List<STUDYKeyframer> kfs = new List<STUDYKeyframer>();
@@ -99,7 +100,7 @@ public class RecordingMaster: MonoBehaviour
     public static void SetRecordStartTime(float t)
 	{
         startTime = t - lastReboot;
-        Debug.Log($"{t}, {startTime}");
+        //Debug.Log($"{t}, {startTime}");
 	}        
 
     public static void CloseRecording()
@@ -122,8 +123,8 @@ public class RecordingMaster: MonoBehaviour
 
         foreach (KeyValuePair<KeyFrameMetadata, string> kvp in frames)
 		{
-            sb.Append($"{JsonUtility.ToJson(kvp.Key)}\n");
-            sb.Append($"{kvp.Value}\n");
+            sb.Append(JsonUtility.ToJson(kvp.Key) + "\n");
+            sb.Append(kvp.Value + "\n");
         }
         //Debug.Log(tmp_string);
 

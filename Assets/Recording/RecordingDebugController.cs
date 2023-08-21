@@ -32,6 +32,8 @@ public class RecordingDebugController : MonoBehaviour
         }
 	}
 
+
+
 	/*IEnumerator DrawRoutine()
 	{
         yield return new WaitForSeconds(1.0f);

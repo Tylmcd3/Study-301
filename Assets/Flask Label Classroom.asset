@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de517cb7ceb69094c9be5096a8570bda, type: 3}
+  m_Name: Flask Label Classroom
+  m_EditorClassIdentifier: 
+  elixirGUIDs:
+  - 53ca857602c81424988a2c16fb1cf27b
+  - 05e1aab789ad26a4ab04dedebd97c316
+  - 2d54921d996867c478d6e21e26eea4fe
+  - 209918f9653f6c843aeb437d2fbeee17
+  - 2d54921d996867c478d6e21e26eea4fe
+  - 05e1aab789ad26a4ab04dedebd97c316
+  - f2f7565200925314c8f0df36d5303a6d
+  - 53ca857602c81424988a2c16fb1cf27b
+  - dc7434d961fe5e1498b6d857b7c84132
+  useDefaultIngredients: 1
+  ingredients: []
+  additionalIngredients:
+  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\FFMediaToolkit.dll
+  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\FFmpeg.AutoGen.dll
+  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\System.Numerics.Vectors.dll
+  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\System.Runtime.CompilerServices.Unsafe.dll

@@ -197,12 +197,10 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
 
             normalsedDistance = (normalsedDistance < 0) ? 0 : normalsedDistance;
             normalsedDistance = (normalsedDistance > 1) ? 1 : normalsedDistance;
-
             int colourSize = Mathf.RoundToInt(Mathf.Lerp(markerMinSize, markerMaxSize, normalsedDistance));
             if (_touch.transform.name == "TabletDrawable")
             {
-                Debug.Log(normalsedDistance);
-                
+
                 if (_Tablet == null)
                 {
                     _Tablet = _touch.transform.GetComponentInParent<DrawingTablet>();
@@ -235,7 +233,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
             }
             else if (_touch.transform.name == "WhiteboardDrawable")
             {
-                Debug.Log(normalsedDistance);
+                //Debug.Log(normalsedDistance);
 
                 if (_Whiteboard == null)
                 {

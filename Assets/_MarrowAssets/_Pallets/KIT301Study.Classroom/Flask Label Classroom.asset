@@ -9,30 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bffa63f5a19c394b9f0ab757607a9ea, type: 3}
-  m_Name: _Classroom
+  m_Script: {fileID: 11500000, guid: fc221bc676d0f3d4f99f97de883e1812, type: 3}
+  m_Name: Flask Label Classroom
   m_EditorClassIdentifier: 
   _barcode:
-    _id: KIT301Study.Classroom
+    _id: KIT301Study.Classroom.Flask.FlaskLabelClassroom
     generated: 1
   _barcodeOld:
     _id: null.empty.barcode
     generated: 0
   _slimCode:
     _byteArray: 
-  _title: Classroom
+  _title: Flask Label Classroom
   _description: 
   _unlockable: 0
   _redacted: 0
-  _author: KIT301Study
-  _version: 0.0.0
-  _sdkVersion: 0.3.7-1748
-  _internal: 0
-  _crates:
-  - {fileID: 11400000, guid: 575cc7c6aef2f5440bb6ba1c949f0cec, type: 2}
-  - {fileID: 11400000, guid: 43b1017932649754a8a23926b0a4cda5, type: 2}
+  _pallet: {fileID: 11400000, guid: 60d78c4aabf4a7e40ab02538939ab1a1, type: 2}
   _tags: []
-  _changeLogs: []
-  _crateTitles:
-  - Classroom
-  - Flask Label Classroom
+  _mainAsset:
+    _assetGUID: 4cde9de459bf4304b85de86b17db8e15
+    _editorAssetChanged: 0
