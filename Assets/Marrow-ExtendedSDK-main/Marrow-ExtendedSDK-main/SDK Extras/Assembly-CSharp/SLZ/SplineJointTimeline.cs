@@ -1,10 +1,12 @@
+using SLZ.Marrow.Interaction;
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace SLZ
+namespace SLZ.Bonelab
 {
 	public class SplineJointTimeline : MonoBehaviour
 	{
+		public SplineJoint splineJoint;
 
 		public PlayableDirector playableDirector;
 
