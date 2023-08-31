@@ -5,14 +5,7 @@ import os
 import subprocess
 import zipfile
 import urllib.request
-
-try:
-    import vdf
-except ImportError:
-    import pip
-    pip.__package__
-    pip.main(['install', '--user', 'vdf'])
-    import vdf
+import vdf
 
 def extract_zip(zip_file_path, extract_to_directory):
     with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
@@ -23,6 +16,8 @@ def delete_files(file_paths):
     for file_path in file_paths:
         if os.path.exists(file_path):
             os.remove(file_path)
+            print(f"Deleted file at : {file_paths} ")
+
 
 def download_file_with_custom_headers(url, destination_path, headers=None):
     try:
@@ -33,29 +28,6 @@ def download_file_with_custom_headers(url, destination_path, headers=None):
         print(f"Downloaded {url} to {destination_path}")
     except Exception as e:
         print(f"Error: {e}")
-
-def download_file(url, destination_path):
-    try:
-        urllib.request.urlretrieve(url, destination_path)
-        print(f"Downloaded {url} to {destination_path}")
-    except Exception as e:
-        print(f"Error: {e}")
-
-def open_file_directory(directory_path):
-    if os.path.exists(directory_path):
-        if os.name == 'nt':  # Windows
-            subprocess.Popen(['explorer', directory_path], shell=True)
-    else:
-        print("Directory does not exist.")
-
-def print_files_in_directory(directory_path):
-    if os.path.exists(directory_path) and os.path.isdir(directory_path):
-        files = [file for file in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, file))]
-        for file in files:
-            print(file)
-    else:
-        print("Directory does not exist.")
-
 
 def get_steam_path(sub_key, value_name):
     try:
@@ -106,6 +78,8 @@ def main():
     extract_zip('bonelib.zip', bonelab_install_dir)
     extract_zip('marrow_cauldron.zip', bonelab_install_dir)
     delete_files(['bonelib.zip','marrow_cauldron.zip'])
+
+    print("The Mod has successfully been installed. Launch the game to finalise the install")
 
 
 
