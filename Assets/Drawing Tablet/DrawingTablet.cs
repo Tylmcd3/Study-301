@@ -30,7 +30,7 @@ public class DrawingTablet : MonoBehaviour
     public float debugMoveDist;
     public Vector2 getTexSize()
     {
-        return _drawingDriver.textureSize;
+        return _drawingDriver.whiteboardSize;
     }
 
     public void Draw(int x, int y, int colourSize, Vector2 _lastTouchPos, Color _colour)
@@ -106,26 +106,20 @@ public class DrawingTablet : MonoBehaviour
         float y = 0.5f - (height * 0.5f);
 
         DrawingPadView = new Rect(x, y, width, height);
-        TexSize = _drawingDriver.textureSize;
+        TexSize = _drawingDriver.whiteboardSize;
 
         DrawingGuideMat = SetupDrawingGuide();
 
         lastGuideDraw = new Rect((int)(TexSize.x * DrawingPadView.x), (int)(TexSize.y * DrawingPadView.y), (int)(TexSize.x * DrawingPadView.width), (int)(TexSize.y * DrawingPadView.height));
 
 
-        _displayRen.materials = new Material[] { _drawingDriver.GetSharedMaterial(), DrawingGuideMat };
+        _displayRen.materials = new Material[] { _drawingDriver.CreateSharedMaterial(), DrawingGuideMat };
         updateDrawingGuide();
-        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Before getting Material");
-        var m = _drawingDriver.GetSharedMaterial();
-        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Got Material");
+        var m = _drawingDriver.CreateSharedMaterial();
 
         m.mainTextureOffset = new Vector2(DrawingPadView.x, DrawingPadView.y);
         m.mainTextureScale = new Vector2(DrawingPadView.width, DrawingPadView.height);
         _drawingPadRen.material = m;
-        
-
-        _displayRen.material.mainTextureOffset = new Vector2(ScreenView.x, ScreenView.y);
-        _displayRen.material.mainTextureScale = new Vector2(ScreenView.width, ScreenView.height);
 
     }
 

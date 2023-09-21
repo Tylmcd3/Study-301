@@ -1,26 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
+public enum SlideChange
+{
+    left = -1,
+    right = 1
+}
+
 [Elixir]
 public class DrawingTextureManager : MonoBehaviour
 {
-    public Texture2D _tex;
-    public Vector2 textureSize = new Vector2(2048, 2048);
-    public Material mat;
+    // Public Variables
+    public Vector2Int whiteboardSize;
+    public Color whiteboardBaseColour = Color.white;
+    public Material baseMaterial;
+    public string saveDir;
+    
+    //Private Storage
+    private List<Material> _sharedMaterials;
+    private List<Texture2D> _whiteboardPages;
+    private List<Texture2D> _pdfPages;
 
-    // Create a list to store all materials that share the texture
-    private List<Material> sharedMaterials;
+    //States
+    private bool isWhiteboard = true;
+    private Texture2D _activeTexture;
+    private int _pdfIndex;
+    private int _whiteboardIndex;
 
-    private void Awake()
+    private void Update()
     {
-        sharedMaterials = new List<Material>();
-        _tex = new Texture2D((int)textureSize.x, (int)textureSize.y);
-        var color = Enumerable.Repeat(Color.white, (int)(textureSize.x * textureSize.y)).ToArray();
-        _tex.SetPixels(color);
-        _tex.Apply();
+        //Debug keys for testing
+        if (Input.GetKeyDown(KeyCode.Keypad1)) { DeleteCurrentSlide(); }
+        if (Input.GetKeyDown(KeyCode.Keypad2)) { ExportTextures(); }
+        if (Input.GetKeyDown(KeyCode.Keypad3)) { CreateNewSlide(whiteboardBaseColour); }
+        if (Input.GetKeyDown(KeyCode.Keypad4)) { MoveSlide(SlideChange.left); }
+        if (Input.GetKeyDown(KeyCode.Keypad5)) { BlankCurrentSlide(); }
+        if (Input.GetKeyDown(KeyCode.Keypad6)) { MoveSlide(SlideChange.right); }
+    }
+    void Awake()
+    {
+        _sharedMaterials = new List<Material>();
+        _whiteboardPages = new List<Texture2D>();
 
-        textureSize = new Vector2(_tex.width, _tex.height);
+        CreateNewSlide(whiteboardBaseColour);
     }
 
     // Start is called before the first frame update
@@ -28,61 +52,144 @@ public class DrawingTextureManager : MonoBehaviour
     {
         //DrawFramer = new STUDYKeyframer(name, nameof(Draw), (object args) => Draw((DrawArgs)args), typeof(DrawArgs));
         //EraseFramer = new STUDYKeyframer(name, nameof(Erase), (object args) => Erase((EraseArgs)args), typeof(EraseArgs));
-       
-        
     }
-
-    // Function to get a material that shares the texture
-    public Material GetSharedMaterial()
+    public Texture2D GetSharedTexture() { return _activeTexture; }
+    public int GetPageIndex() { return (isWhiteboard) ? _whiteboardIndex : _pdfIndex;  
+    }
+    public Material CreateSharedMaterial()
     {
-        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Before creating Material");
-        Material newMat = new Material(mat); // Use the appropriate shader
-        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Before setting texture");
-
-        // Set the shared texture
-        newMat.mainTexture = _tex;
-        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "before adding it to the list of materials");
-        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "sharedMaterials = " + sharedMaterials.Count);
-
-        // Add the material to the list of shared materials
-        sharedMaterials.Add(newMat);
-        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Returning");
+        Material newMat = new Material(baseMaterial);
+        newMat.mainTexture = _activeTexture;
+        _sharedMaterials.Add(newMat);
 
         return newMat;
     }
-
-    // Function to update the shared texture
-    public void UpdateSharedTexture(Texture2D newTexture)
+    private void UpdateSharedTexture()
     {
-        _tex = newTexture;
-
-        // Update the texture for all shared materials
-        foreach (Material mat in sharedMaterials)
+        _activeTexture = (isWhiteboard) ? _whiteboardPages[_whiteboardIndex] : _pdfPages[_pdfIndex];
+        foreach (Material mat in _sharedMaterials)
         {
-            mat.SetTexture("_BaseMap", _tex);
+            mat.SetTexture("_BaseMap", _activeTexture);
         }
     }
+    public void CreateNewSlide(Color col, int index = -1)
+    {
+        if (isWhiteboard)
+        {
+            Texture2D slide = new Texture2D(whiteboardSize.x, whiteboardSize.y);
+            Color[] color = Enumerable.Repeat(Color.white, (whiteboardSize.x * whiteboardSize.y)).ToArray();
+
+            slide.SetPixels(color);
+            slide.Apply();
+
+            if (index == -1)
+            {
+                _whiteboardPages.Add(slide);
+                _whiteboardIndex = _whiteboardPages.Count - 1;
+            }
+            else
+            {
+                _whiteboardPages.Insert(index, slide);
+            }
+
+            UpdateSharedTexture();
+        }
+        else
+            Debug.Log("You cannot insert slides into a pdf");
+    }
+    // Loads of ternary operators here, not super elegant but stops duplicate code
+    public void MoveSlide(SlideChange dir)
+    {
+        int newIndex = isWhiteboard ? (_whiteboardIndex + (int)dir) : (_pdfIndex + (int)dir);
+        int count = isWhiteboard ? _whiteboardPages.Count : _pdfPages.Count;
+        if (newIndex >= 0 && newIndex < count)
+        {
+            _ = (isWhiteboard) ? (_whiteboardIndex = newIndex) : (_pdfIndex = newIndex);
+            UpdateSharedTexture();
+        }
+    }
+    public void BlankCurrentSlide()
+    {
+        if(isWhiteboard)
+            CreateNewSlide(whiteboardBaseColour, _whiteboardIndex);
+        else
+            Debug.Log("You cannot blank pdf slides");
+    }
+    public void DeleteCurrentSlide()
+    {
+        if(isWhiteboard)
+        { 
+            _whiteboardPages.RemoveAt(_whiteboardIndex);
+            if (_whiteboardIndex > 0)
+            {
+                _whiteboardIndex--;
+                UpdateSharedTexture();
+            }
+            else
+            {
+                CreateNewSlide(whiteboardBaseColour);
+            }
+        }
+        else
+            Debug.Log("You cannot Delete pdf slides");
+
+    }
+    //TODO: Convert this to PDF export
+    public void ExportTextures()
+    {
+        if (isWhiteboard)
+        { 
+            string savePath = Path.Combine(Application.dataPath, saveDir);
+
+            if (!Directory.Exists(saveDir))
+                Directory.CreateDirectory(saveDir);
+            long time = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            for (int i = 0; i < _whiteboardPages.Count; i++)
+            {
+                string textureName = time + "-Slide" + i + ".png"; // You can customize the file name.
+                string filePath = Path.Combine(savePath, textureName);
+                Debug.Log(filePath);
+                byte[] bytes = _whiteboardPages[i].EncodeToPNG();
+
+                File.WriteAllBytes(filePath, bytes);
+            }
+        }
+        else
+            Debug.Log("PDF Exporting is not yet implemented");
+    }
+    public void LoadPDFIntoManager(List<Texture2D> pdf, bool ShowPDF) {
+        if (pdf.Count > 0)
+        {
+            _pdfPages = pdf;
+            _pdfIndex = 0;
+            isWhiteboard = !ShowPDF;
+            UpdateSharedTexture();
+        }
+
+    }
+
+    
     //STUDYKeyframer DrawFramer;
     //STUDYKeyframer EraseFramer;
     public struct DrawArgs { public int x, y, coloursize; public Vector2 _lastTouchPos; public Color _colour; }
     public struct EraseArgs { public int x, y, sizeX, sizeY; public Vector2 _lastTouchPos; }
     public void Draw(DrawArgs args) { Draw(args.x, args.y, args.coloursize, args._lastTouchPos, args._colour); }
     public void Erase(EraseArgs args) { Erase(args.x, args.y, args.sizeX, args.sizeY, args._lastTouchPos); }
-
+    // These will Draw and erase to the current 
     public void Draw(int x, int y, int colourSize, Vector2 _lastTouchPos, Color _colour)
     {
         //DrawFramer.AddFrame(new DrawArgs { x = x, y = y, coloursize = colourSize, _lastTouchPos = _lastTouchPos, _colour = _colour });
 
         Color[] _colours = Enumerable.Repeat(_colour, colourSize * colourSize).ToArray();
 
-        _tex.SetPixels(x, y, colourSize, colourSize, _colours);
+        _activeTexture.SetPixels(x, y, colourSize, colourSize, _colours);
         for (float f = 0.01f; f < 1.00f; f += 0.01f)
         {
             var lerpX = (int)Mathf.Lerp(_lastTouchPos.x, x, f);
             var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
-            _tex.SetPixels(lerpX, lerpY, colourSize, colourSize, _colours);
+            _activeTexture.SetPixels(lerpX, lerpY, colourSize, colourSize, _colours);
         }
-        _tex.Apply();
+        _activeTexture.Apply();
 
     }
     public void Erase(int x, int y, int sizeX, int sizeY, Vector2 _lastTouchPos)
@@ -90,14 +197,14 @@ public class DrawingTextureManager : MonoBehaviour
         //EraseFramer.AddFrame(new EraseArgs { x = x, y = y, sizeX = sizeX, sizeY = sizeY, _lastTouchPos = _lastTouchPos });
 
         var _colours = Enumerable.Repeat(Color.white, (int)(sizeX * sizeY)).ToArray();
-        _tex.SetPixels(x, y, sizeX, sizeY, _colours);
+        _activeTexture.SetPixels(x, y, sizeX, sizeY, _colours);
         for (float f = 0.01f; f < 1.00f; f += 0.01f)
         {
             var lerpX = (int)Mathf.Lerp(_lastTouchPos.x, x, f);
             var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
-            _tex.SetPixels(lerpX, lerpY, sizeX, sizeY, _colours);
+            _activeTexture.SetPixels(lerpX, lerpY, sizeX, sizeY, _colours);
         }
-        _tex.Apply();
+        _activeTexture.Apply();
     }
 
 }

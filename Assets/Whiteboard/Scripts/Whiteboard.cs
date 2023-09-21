@@ -6,11 +6,9 @@ public class Whiteboard : MonoBehaviour
     public GameObject DrawingDriver;
     private DrawingTextureManager _drawingDriver;
 
-    public Vector2 textureSize = new Vector2(2048, 2048);
-
     public Vector2 getTexSize()
     {
-        return _drawingDriver.textureSize;
+        return _drawingDriver.whiteboardSize;
     }
 
     public void Draw(int x, int y, int colourSize, Vector2 _lastTouchPos, Color _colour)
@@ -26,7 +24,7 @@ public class Whiteboard : MonoBehaviour
     {
         _drawingDriver = DrawingDriver.GetComponent<DrawingTextureManager>();
         var r = GetComponent<Renderer>();
-        var m = _drawingDriver.GetSharedMaterial();
+        var m = _drawingDriver.CreateSharedMaterial();
         r.material = m;
     }
 

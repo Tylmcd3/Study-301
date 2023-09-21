@@ -209,7 +209,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
                 {
                     _Tablet = _touch.transform.GetComponentInParent<DrawingTablet>();
                 }
-                Vector2 texSize = _drawingDriver.textureSize;
+                Vector2 texSize = _drawingDriver.whiteboardSize;
 
                 Vector3 worldSpaceHitPoint = _touch.point;
                 Vector3 localSpaceHitPoint = _touch.collider.transform.worldToLocalMatrix.MultiplyPoint(worldSpaceHitPoint);
@@ -249,7 +249,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
                 {
                     _Whiteboard = _touch.transform.GetComponent<Whiteboard>();
                 }
-                Vector2 texSize = _drawingDriver.textureSize;
+                Vector2 texSize = _drawingDriver.whiteboardSize;
 
                 _touchPos = new Vector2(_touch.textureCoord.x, _touch.textureCoord.y);
 
