@@ -5,51 +5,63 @@ using UnityEngine;
 [Elixir]
 public class DrawingTextureManager : MonoBehaviour
 {
-    public bool showTestTex;
-    [HideInInspector] public Texture2D _tex;
-    public Texture2D testTex;
+    public Texture2D _tex;
+    public Vector2 textureSize = new Vector2(2048, 2048);
     public Material mat;
 
-    public Vector2 textureSize = new Vector2(2048, 2048);
+    // Create a list to store all materials that share the texture
+    private List<Material> sharedMaterials;
+
+    private void Awake()
+    {
+        sharedMaterials = new List<Material>();
+        _tex = new Texture2D((int)textureSize.x, (int)textureSize.y);
+        var color = Enumerable.Repeat(Color.white, (int)(textureSize.x * textureSize.y)).ToArray();
+        _tex.SetPixels(color);
+        _tex.Apply();
+
+        textureSize = new Vector2(_tex.width, _tex.height);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         //DrawFramer = new STUDYKeyframer(name, nameof(Draw), (object args) => Draw((DrawArgs)args), typeof(DrawArgs));
         //EraseFramer = new STUDYKeyframer(name, nameof(Erase), (object args) => Erase((EraseArgs)args), typeof(EraseArgs));
-
-        if(showTestTex)
-        {
-            _tex = Instantiate(testTex);
-        }
-        else
-        {
-            //Setup Texture
-            _tex = new Texture2D((int)textureSize.x, (int)textureSize.y);
-            var color = Enumerable.Repeat(Color.white, (int)(textureSize.x * textureSize.y)).ToArray();
-            _tex.SetPixels(color);
-            _tex.Apply();
-        }
-        textureSize = new Vector2(_tex.width, _tex.height);
-
-
+       
+        
     }
-    public Material GetMat(Material applyMat = null)
+
+    // Function to get a material that shares the texture
+    public Material GetSharedMaterial()
     {
-        Material newMat;
-        if (applyMat == null)
-        {
-            newMat = new Material(mat);
-        }
-        else
-        {
-            newMat = new Material(applyMat);
-        }
-        newMat.SetTexture("_BaseMap", _tex);
+        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Before creating Material");
+        Material newMat = new Material(mat); // Use the appropriate shader
+        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Before setting texture");
+
+        // Set the shared texture
+        newMat.mainTexture = _tex;
+        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "before adding it to the list of materials");
+        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "sharedMaterials = " + sharedMaterials.Count);
+
+        // Add the material to the list of shared materials
+        sharedMaterials.Add(newMat);
+        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Returning");
+
         return newMat;
     }
 
+    // Function to update the shared texture
+    public void UpdateSharedTexture(Texture2D newTexture)
+    {
+        _tex = newTexture;
 
+        // Update the texture for all shared materials
+        foreach (Material mat in sharedMaterials)
+        {
+            mat.SetTexture("_BaseMap", _tex);
+        }
+    }
     //STUDYKeyframer DrawFramer;
     //STUDYKeyframer EraseFramer;
     public struct DrawArgs { public int x, y, coloursize; public Vector2 _lastTouchPos; public Color _colour; }

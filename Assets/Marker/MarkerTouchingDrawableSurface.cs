@@ -40,6 +40,9 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
     public Material Transparent;
     public Material Opaque;
 
+    public GameObject DrawingDriver;
+    private DrawingTextureManager _drawingDriver;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +50,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
 
         TipRenderer = _tip.GetComponent<MeshRenderer>();
         WandRenderer = _wand.GetComponent<MeshRenderer>();
+        _drawingDriver = DrawingDriver.GetComponent<DrawingTextureManager>();
         GeneratePenTip();
         GenerateDepthWand();
     }
@@ -187,8 +191,6 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
         Material mat = new Material(Transparent);
         mat.color = _colour;
         WandRenderer.material = mat;
-        
-        
     }
 
     private void Draw()
@@ -203,19 +205,15 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
             int colourSize = Mathf.RoundToInt(Mathf.Lerp(markerMinSize, markerMaxSize, normalsedDistance));
             if (_touch.collider.transform.name == "TabletDrawable")
             {
-
                 if (_Tablet == null)
                 {
                     _Tablet = _touch.transform.GetComponentInParent<DrawingTablet>();
                 }
-                Vector2 texSize = _Tablet.getTexSize();
+                Vector2 texSize = _drawingDriver.textureSize;
 
                 Vector3 worldSpaceHitPoint = _touch.point;
                 Vector3 localSpaceHitPoint = _touch.collider.transform.worldToLocalMatrix.MultiplyPoint(worldSpaceHitPoint);
 
-
-
-                //Debug.Log(_touch.collider.transform.InverseTransformPoint(_touch.point));
                 //Gross maths that is getting the hit point, converting it to the colliders local space, making that a 0-1 value and inverting it.
                 //The +5 and /10 come from the range I was getting from local Space hit was -5 to 5, so +5 offsets it to 0-10 and divide by 10 to normalise.
                 _touchPos = new Vector2(1-((localSpaceHitPoint.x + 5)/10), 1 - ((localSpaceHitPoint.z + 5) / 10));
@@ -233,7 +231,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    _Tablet.Draw(x, y, colourSize, _lastTouchPos, TipRenderer.material.color);
+                    _drawingDriver.Draw(x, y, colourSize, _lastTouchPos, TipRenderer.material.color);
                     if (normalsedDistance > 0.98f)
                         transform.rotation = _lastTouchRot;
                 }
@@ -251,7 +249,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
                 {
                     _Whiteboard = _touch.transform.GetComponent<Whiteboard>();
                 }
-                Vector2 texSize = _Whiteboard.getTexSize();
+                Vector2 texSize = _drawingDriver.textureSize;
 
                 _touchPos = new Vector2(_touch.textureCoord.x, _touch.textureCoord.y);
 
@@ -261,7 +259,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    _Whiteboard.Draw(x, y, colourSize, _lastTouchPos, TipRenderer.material.color);
+                    _drawingDriver.Draw(x, y, colourSize, _lastTouchPos, TipRenderer.material.color);
                     if(normalsedDistance > 0.98f)
                         transform.rotation = _lastTouchRot;
                 }

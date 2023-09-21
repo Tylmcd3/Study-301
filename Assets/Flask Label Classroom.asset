@@ -24,8 +24,4 @@ MonoBehaviour:
   - dc7434d961fe5e1498b6d857b7c84132
   useDefaultIngredients: 1
   ingredients: []
-  additionalIngredients:
-  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\FFMediaToolkit.dll
-  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\FFmpeg.AutoGen.dll
-  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\System.Numerics.Vectors.dll
-  - ..\..\..\..\..\..\GIT\Study-301\Assets\packages\System.Runtime.CompilerServices.Unsafe.dll
+  additionalIngredients: []

@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class WhiteboardMarker : MonoBehaviour
 {
-    [SerializeField]private bool isRunningUnity = false;
+    [SerializeField] private bool isRunningUnity = false;
     public Transform _tip;
     public Transform _tipPoint;
     public int _penSize = 5;
@@ -34,19 +34,9 @@ public class WhiteboardMarker : MonoBehaviour
 
         if (Physics.Raycast(_tipPoint.position, transform.up, out _touch, _tipHeight))
         {
-            
-
             _colours = Enumerable.Repeat(_renderer.material.color, _penSize * _penSize).ToArray();
             if (_touch.transform.name == "WhiteboardDrawable")
             {
-                if(isRunningUnity){
-                    Debug.Log("The Hit had the tag of "+_touch.transform.name);
-                    Debug.Log("Hit "+_touch.ToString()); 
-                }else{
-                    MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "The Hit had the tag of "+_touch.transform.name);
-                    MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, "Hit "+_touch.ToString()); 
-                }
-                      
                 if (_whiteboard == null)
                 {
                     
@@ -59,7 +49,7 @@ public class WhiteboardMarker : MonoBehaviour
                 var y = (int)(_touchPos.y * _whiteboard.getTexSize().y - (_penSize / 2));
 
 
-                if (y < 0 || y > _whiteboard.tex.height || x < 0 || x > _whiteboard.tex.width) return;
+                //if (y < 0 || y > _whiteboard.tex.height || x < 0 || x > _whiteboard.tex.width) return;
                 if(isRunningUnity)
                     Debug.Log("The pen hit ("+x+","+y+")");      
                 else 
@@ -67,18 +57,18 @@ public class WhiteboardMarker : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    _whiteboard.tex.SetPixels(x, y, _penSize, _penSize, _colours);
+                    //_whiteboard.tex.SetPixels(x, y, _penSize, _penSize, _colours);
 
                     for (float f = 0.01f; f < 1.00f; f += 0.01f)
                     {
                         var lerpX = (int)Mathf.Lerp(_lastTouchPos.x, x, f);
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
-                        _whiteboard.tex.SetPixels(lerpX, lerpY, _penSize, _penSize, _colours);
+                       // _whiteboard.tex.SetPixels(lerpX, lerpY, _penSize, _penSize, _colours);
                     }
 
                     transform.rotation = _lastTouchRot;
 
-                    _whiteboard.tex.Apply();
+                    //_whiteboard.tex.Apply();
                 }
                 _lastTouchPos = new Vector2(x, y);
                 _lastTouchRot = transform.rotation;
