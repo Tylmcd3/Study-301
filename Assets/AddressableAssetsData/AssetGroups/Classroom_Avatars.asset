@@ -15,12 +15,12 @@ MonoBehaviour:
   m_GroupName: Classroom_Avatars
   m_Data:
     m_SerializedData: []
-  m_GUID: f3781f3a13fc5964e885a3a6e06cca88
+  m_GUID: ebc36a5cbbf7fa1488fe238ab75496ef
   m_SerializeEntries: []
   m_ReadOnly: 0
-  m_Settings: {fileID: 11400000, guid: c68d4534b25564f4b9037b32ba4f7179, type: 2}
+  m_Settings: {fileID: 11400000, guid: d81bdfbb0db807d4ea94dd5812e1f536, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 0397f477107e3a14d980eeea253cb4eb, type: 2}
-    - {fileID: 11400000, guid: f993d9cbe1720e84f876253ea3255cac, type: 2}
-    - {fileID: 11400000, guid: 27dd152df7357d14f81ea56bcf3409f5, type: 2}
+    - {fileID: 11400000, guid: af0a2ec4e8980f04e9eb244462fe36e7, type: 2}
+    - {fileID: 11400000, guid: eb020c0ad4849794d9611939fb7820c6, type: 2}
+    - {fileID: 11400000, guid: 86a0e298fff7ff24d9d6f1c28b951421, type: 2}

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1910159ced7b0ca439631241a1df5fd1, type: 3}
   m_Name: Classroom_VFXs_PalletGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 995d8ee3713d4c44f829a1b95361f089, type: 2}
+  m_Group: {fileID: 11400000, guid: d60936a7be0d70f409b76b10a7786d66, type: 2}
   _pallet: {fileID: 11400000, guid: 60d78c4aabf4a7e40ab02538939ab1a1, type: 2}

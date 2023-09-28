@@ -15,12 +15,12 @@ MonoBehaviour:
   m_GroupName: Classroom_Spawnables
   m_Data:
     m_SerializedData: []
-  m_GUID: 2e8605c9aebe8f6489eb428fac089225
+  m_GUID: 8f76c569f45f34a4e856126cec1dcf44
   m_SerializeEntries: []
   m_ReadOnly: 0
-  m_Settings: {fileID: 11400000, guid: c68d4534b25564f4b9037b32ba4f7179, type: 2}
+  m_Settings: {fileID: 11400000, guid: d81bdfbb0db807d4ea94dd5812e1f536, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: c9cc70449745a944281baf1e9c051d52, type: 2}
-    - {fileID: 11400000, guid: d0737244747fc8e41b39801530ef1944, type: 2}
-    - {fileID: 11400000, guid: 8715921d4168a584fafa86d06c66faa6, type: 2}
+    - {fileID: 11400000, guid: 53eabdd69eca1364f9ad5d8c89b4a70a, type: 2}
+    - {fileID: 11400000, guid: 495b15e2737896e4cb6ad53142f2c67f, type: 2}
+    - {fileID: 11400000, guid: eb7e397c441afa54eb006885fb6f59ec, type: 2}

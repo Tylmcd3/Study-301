@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-public enum SlideChange
-{
-    left = -1,
-    right = 1
-}
+
 
 [Elixir]
 public class DrawingTextureManager : MonoBehaviour
 {
+    public enum SlideChange
+    {
+        left = -1,
+        right = 1
+    }
     // Public Variables
     public Vector2Int whiteboardSize;
     public Color whiteboardBaseColour = Color.white;
@@ -34,17 +35,19 @@ public class DrawingTextureManager : MonoBehaviour
         //Debug keys for testing
         if (Input.GetKeyDown(KeyCode.Keypad1)) { DeleteCurrentSlide(); }
         if (Input.GetKeyDown(KeyCode.Keypad2)) { ExportTextures(); }
-        if (Input.GetKeyDown(KeyCode.Keypad3)) { CreateNewSlide(whiteboardBaseColour); }
+        if (Input.GetKeyDown(KeyCode.Keypad3)) { CreateNewSlide(); }
         if (Input.GetKeyDown(KeyCode.Keypad4)) { MoveSlide(SlideChange.left); }
         if (Input.GetKeyDown(KeyCode.Keypad5)) { BlankCurrentSlide(); }
         if (Input.GetKeyDown(KeyCode.Keypad6)) { MoveSlide(SlideChange.right); }
+        if (Input.GetKeyDown(KeyCode.Keypad7)) { LoadPDFIntoManager(false); }
+        if (Input.GetKeyDown(KeyCode.Keypad8)) { ToggleDisplay(); }
     }
     void Awake()
     {
         _sharedMaterials = new List<Material>();
         _whiteboardPages = new List<Texture2D>();
 
-        CreateNewSlide(whiteboardBaseColour);
+        CreateNewSlide();
     }
 
     // Start is called before the first frame update
@@ -54,8 +57,7 @@ public class DrawingTextureManager : MonoBehaviour
         //EraseFramer = new STUDYKeyframer(name, nameof(Erase), (object args) => Erase((EraseArgs)args), typeof(EraseArgs));
     }
     public Texture2D GetSharedTexture() { return _activeTexture; }
-    public int GetPageIndex() { return (isWhiteboard) ? _whiteboardIndex : _pdfIndex;  
-    }
+    public int GetPageIndex() { return (isWhiteboard) ? _whiteboardIndex : _pdfIndex; }
     public Material CreateSharedMaterial()
     {
         Material newMat = new Material(baseMaterial);
@@ -72,7 +74,7 @@ public class DrawingTextureManager : MonoBehaviour
             mat.SetTexture("_BaseMap", _activeTexture);
         }
     }
-    public void CreateNewSlide(Color col, int index = -1)
+    public void CreateNewSlide(int index = -1)
     {
         if (isWhiteboard)
         {
@@ -97,6 +99,18 @@ public class DrawingTextureManager : MonoBehaviour
         else
             Debug.Log("You cannot insert slides into a pdf");
     }
+    public void MoveSlide(string dir)
+    {
+        if(dir == "left")
+        {
+            MoveSlide(SlideChange.left);
+        }
+        else
+        {
+            MoveSlide(SlideChange.right);
+
+        }
+    }
     // Loads of ternary operators here, not super elegant but stops duplicate code
     public void MoveSlide(SlideChange dir)
     {
@@ -111,7 +125,7 @@ public class DrawingTextureManager : MonoBehaviour
     public void BlankCurrentSlide()
     {
         if(isWhiteboard)
-            CreateNewSlide(whiteboardBaseColour, _whiteboardIndex);
+            CreateNewSlide( _whiteboardIndex);
         else
             Debug.Log("You cannot blank pdf slides");
     }
@@ -127,7 +141,7 @@ public class DrawingTextureManager : MonoBehaviour
             }
             else
             {
-                CreateNewSlide(whiteboardBaseColour);
+                CreateNewSlide();
             }
         }
         else
@@ -135,10 +149,11 @@ public class DrawingTextureManager : MonoBehaviour
 
     }
     //TODO: Convert this to PDF export
+
     public void ExportTextures()
     {
         if (isWhiteboard)
-        { 
+        {
             string savePath = Path.Combine(Application.dataPath, saveDir);
 
             if (!Directory.Exists(saveDir))
@@ -157,18 +172,30 @@ public class DrawingTextureManager : MonoBehaviour
         else
             Debug.Log("PDF Exporting is not yet implemented");
     }
-    public void LoadPDFIntoManager(List<Texture2D> pdf, bool ShowPDF) {
-        if (pdf.Count > 0)
+
+    public void LoadPDFIntoManager(bool showPDF) {
+        List<Texture2D> pdf = GetComponent<pdfStorage>().getPDF();
+
+        if (pdf != null)
         {
             _pdfPages = pdf;
             _pdfIndex = 0;
-            isWhiteboard = !ShowPDF;
+            isWhiteboard = !showPDF;
             UpdateSharedTexture();
         }
 
     }
+    public void ToggleDisplay()
+    {
+        if(_pdfPages.Count <= 0)
+        {
+            LoadPDFIntoManager(false);
+        }
+        isWhiteboard = !isWhiteboard;
+        UpdateSharedTexture();
+    }
 
-    
+
     //STUDYKeyframer DrawFramer;
     //STUDYKeyframer EraseFramer;
     public struct DrawArgs { public int x, y, coloursize; public Vector2 _lastTouchPos; public Color _colour; }

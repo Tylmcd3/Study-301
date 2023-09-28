@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+[Elixir]
 public class PdfUtils : MonoBehaviour
 {
-    
     public static PdfUtils singleton;
 	private void Start()
 	{
@@ -28,8 +28,6 @@ public class PdfUtils : MonoBehaviour
 	{
         readQueue.Enqueue(new PdfRasterizeInstructions() { page = page, textureSize = new Vector2Int(tex.width, tex.height), tex = tex, completeAction = completeAction });
 	}
-
-
     IEnumerator ManagePdfReading()
     {
         while (true)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5d17a21594effb4e9591490b009e7aa, type: 3}
   m_Name: Classroom_Avatars_BundledAssetGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: fb9e9aa942c70884792f8f8e9f86ffe6, type: 2}
+  m_Group: {fileID: 11400000, guid: 5dc35e78673b3514da165dfed5181e60, type: 2}
   m_InternalBundleIdMode: 0
   m_Compression: 1
   m_IncludeAddressInCatalog: 0

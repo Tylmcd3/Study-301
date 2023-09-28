@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1910159ced7b0ca439631241a1df5fd1, type: 3}
   m_Name: Classroom_Spawnables_PalletGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 2ef3f556b142cf44cb2d58cbd9d02f0f, type: 2}
+  m_Group: {fileID: 11400000, guid: f32139dc39f176b428aa7b8109ba0341, type: 2}
   _pallet: {fileID: 11400000, guid: 60d78c4aabf4a7e40ab02538939ab1a1, type: 2}

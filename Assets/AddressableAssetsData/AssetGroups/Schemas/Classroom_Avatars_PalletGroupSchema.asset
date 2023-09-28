@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1910159ced7b0ca439631241a1df5fd1, type: 3}
   m_Name: Classroom_Avatars_PalletGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: fb9e9aa942c70884792f8f8e9f86ffe6, type: 2}
+  m_Group: {fileID: 11400000, guid: 5dc35e78673b3514da165dfed5181e60, type: 2}
   _pallet: {fileID: 11400000, guid: 60d78c4aabf4a7e40ab02538939ab1a1, type: 2}

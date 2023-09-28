@@ -15,12 +15,12 @@ MonoBehaviour:
   m_GroupName: Classroom_VFXs
   m_Data:
     m_SerializedData: []
-  m_GUID: 5a1244c758223734a80c151050a0d386
+  m_GUID: 4cedee18c3f22284a8bbdb9578b6e668
   m_SerializeEntries: []
   m_ReadOnly: 0
-  m_Settings: {fileID: 11400000, guid: c68d4534b25564f4b9037b32ba4f7179, type: 2}
+  m_Settings: {fileID: 11400000, guid: d81bdfbb0db807d4ea94dd5812e1f536, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 57b521ce210ce7346bb2c32a1cf0343e, type: 2}
-    - {fileID: 11400000, guid: 92c63c1dc34e38642bebec06387f01b7, type: 2}
-    - {fileID: 11400000, guid: f64fbb061dece964397b8a6ccf3aee9d, type: 2}
+    - {fileID: 11400000, guid: b3dbb6ebbd0a078488cf6dc3b0044ee9, type: 2}
+    - {fileID: 11400000, guid: d08aa8b94ab5a904e8f5090c4c5deb3a, type: 2}
+    - {fileID: 11400000, guid: 9f4734e8e78451c4b8d82eac18ea7c98, type: 2}
