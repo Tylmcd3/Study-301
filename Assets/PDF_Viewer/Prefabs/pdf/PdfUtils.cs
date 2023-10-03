@@ -1,5 +1,5 @@
-using Apitron.PDF.Rasterizer;
-using Apitron.PDF.Rasterizer.Configuration;
+//using Apitron.PDF.Rasterizer;
+//using Apitron.PDF.Rasterizer.Configuration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,10 +9,14 @@ using UnityEngine;
 [Elixir]
 public class PdfUtils : MonoBehaviour
 {
+   /* struct Page { public int paging; }*/
     public static PdfUtils singleton;
-	private void Start()
-	{
+    private void Start()
+    {
+
         singleton = this;
+    }
+        /*
         StartCoroutine(ManagePdfReading());
         StartCoroutine(ManageTextureWriting());
     }
@@ -23,11 +27,12 @@ public class PdfUtils : MonoBehaviour
 
     Queue<PdfRasterizeInstructions> readQueue = new Queue<PdfRasterizeInstructions>();
     Queue<PdfRasterizeInstructions> writeQueue = new Queue<PdfRasterizeInstructions>();
-
-    public void GetPageAsTexture(Page page, ref Texture2D tex, Action<Texture2D> completeAction)
+*/
+   /* public void GetPageAsTexture(int page, ref Texture2D tex, Action<Texture2D> completeAction)
 	{
-        readQueue.Enqueue(new PdfRasterizeInstructions() { page = page, textureSize = new Vector2Int(tex.width, tex.height), tex = tex, completeAction = completeAction });
-	}
+
+	}*/
+    /*
     IEnumerator ManagePdfReading()
     {
         while (true)
@@ -118,8 +123,8 @@ public class PdfUtils : MonoBehaviour
                     //Time management
                     if ((i + 1) % MAX_TEXTURE_FILL_PER_FRAME == 0)
                     {
-                        if (time - Time.realtimeSinceStartup > 0.01)
-                            Debug.Log(time - Time.realtimeSinceStartup);
+                        *//*if (time - Time.realtimeSinceStartup > 0.01)
+                            Debug.Log(time - Time.realtimeSinceStartup);*//*
                         time = Time.realtimeSinceStartup;
                         yield return new WaitForEndOfFrame();
                     }
@@ -149,7 +154,7 @@ public class PdfUtils : MonoBehaviour
         public Texture2D tex;
         public Action<Texture2D> completeAction;
         public byte[] arr;
-    }
+    }*/
 
 
 }

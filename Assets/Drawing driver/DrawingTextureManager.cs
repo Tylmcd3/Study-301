@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-
+using static pdfStorage;
 
 [Elixir]
 public class DrawingTextureManager : MonoBehaviour
@@ -44,8 +44,14 @@ public class DrawingTextureManager : MonoBehaviour
     }
     void Awake()
     {
+        isWhiteboard = true;
+
         _sharedMaterials = new List<Material>();
         _whiteboardPages = new List<Texture2D>();
+        _pdfPages = new List<Texture2D>();
+        _activeTexture = new Texture2D(whiteboardSize.x, whiteboardSize.y);
+        _pdfIndex = 0;
+        _whiteboardIndex = 0;
 
         CreateNewSlide();
     }
@@ -63,20 +69,29 @@ public class DrawingTextureManager : MonoBehaviour
         Material newMat = new Material(baseMaterial);
         newMat.mainTexture = _activeTexture;
         _sharedMaterials.Add(newMat);
+        UpdateSharedTexture();
 
         return newMat;
     }
     private void UpdateSharedTexture()
     {
+
         _activeTexture = (isWhiteboard) ? _whiteboardPages[_whiteboardIndex] : _pdfPages[_pdfIndex];
-        foreach (Material mat in _sharedMaterials)
+        if (_sharedMaterials.Count > 0)
         {
-            mat.SetTexture("_BaseMap", _activeTexture);
+
+
+            foreach (Material mat in _sharedMaterials)
+            {
+
+                mat.SetTexture("_BaseMap", _activeTexture);
+            }
         }
+        
+
     }
     public void CreateNewSlide(int index = -1)
     {
-        if (isWhiteboard)
         {
             Texture2D slide = new Texture2D(whiteboardSize.x, whiteboardSize.y);
             Color[] color = Enumerable.Repeat(Color.white, (whiteboardSize.x * whiteboardSize.y)).ToArray();
@@ -86,18 +101,17 @@ public class DrawingTextureManager : MonoBehaviour
 
             if (index == -1)
             {
+
                 _whiteboardPages.Add(slide);
                 _whiteboardIndex = _whiteboardPages.Count - 1;
+
             }
             else
             {
                 _whiteboardPages.Insert(index, slide);
             }
-
             UpdateSharedTexture();
         }
-        else
-            Debug.Log("You cannot insert slides into a pdf");
     }
     public void MoveSlide(string dir)
     {
@@ -126,8 +140,6 @@ public class DrawingTextureManager : MonoBehaviour
     {
         if(isWhiteboard)
             CreateNewSlide( _whiteboardIndex);
-        else
-            Debug.Log("You cannot blank pdf slides");
     }
     public void DeleteCurrentSlide()
     {
@@ -144,8 +156,6 @@ public class DrawingTextureManager : MonoBehaviour
                 CreateNewSlide();
             }
         }
-        else
-            Debug.Log("You cannot Delete pdf slides");
 
     }
     //TODO: Convert this to PDF export
@@ -159,26 +169,24 @@ public class DrawingTextureManager : MonoBehaviour
             if (!Directory.Exists(saveDir))
                 Directory.CreateDirectory(saveDir);
             long time = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            for (int i = 0; i < _whiteboardPages.Count; i++)
+            int pageCount = 1;
+            foreach(Texture2D tex in _whiteboardPages)
             {
-                string textureName = time + "-Slide" + i + ".png"; // You can customize the file name.
+                string textureName = time + "-Slide" + pageCount + ".png";
                 string filePath = Path.Combine(savePath, textureName);
-                Debug.Log(filePath);
-                byte[] bytes = _whiteboardPages[i].EncodeToPNG();
+                byte[] bytes = tex.EncodeToPNG();
 
                 File.WriteAllBytes(filePath, bytes);
+                pageCount++;
             }
         }
-        else
-            Debug.Log("PDF Exporting is not yet implemented");
     }
 
     public void LoadPDFIntoManager(bool showPDF) {
-        List<Texture2D> pdf = GetComponent<pdfStorage>().getPDF();
-
-        if (pdf != null)
+        DocumentTransfer doct = GetComponent<pdfStorage>().getPDF();
+        if(doct.texs.Count > 0)
         {
-            _pdfPages = pdf;
+            _pdfPages = doct.texs;
             _pdfIndex = 0;
             isWhiteboard = !showPDF;
             UpdateSharedTexture();
@@ -208,7 +216,6 @@ public class DrawingTextureManager : MonoBehaviour
         //DrawFramer.AddFrame(new DrawArgs { x = x, y = y, coloursize = colourSize, _lastTouchPos = _lastTouchPos, _colour = _colour });
 
         Color[] _colours = Enumerable.Repeat(_colour, colourSize * colourSize).ToArray();
-
         _activeTexture.SetPixels(x, y, colourSize, colourSize, _colours);
         for (float f = 0.01f; f < 1.00f; f += 0.01f)
         {
@@ -224,6 +231,9 @@ public class DrawingTextureManager : MonoBehaviour
         //EraseFramer.AddFrame(new EraseArgs { x = x, y = y, sizeX = sizeX, sizeY = sizeY, _lastTouchPos = _lastTouchPos });
 
         var _colours = Enumerable.Repeat(Color.white, (int)(sizeX * sizeY)).ToArray();
+        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, _activeTexture == null);
+        MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, _activeTexture.ToString());
+
         _activeTexture.SetPixels(x, y, sizeX, sizeY, _colours);
         for (float f = 0.01f; f < 1.00f; f += 0.01f)
         {

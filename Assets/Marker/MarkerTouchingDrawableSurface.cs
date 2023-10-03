@@ -197,11 +197,11 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
     {
         if (Physics.Raycast(_wand.position, transform.up, out _touch, beamLength/2)) //beamLength is 1/2 because The Mesh size is halved
         {
-
             float normalsedDistance = 1 - ((_touch.distance * 2) / beamLength);
 
             normalsedDistance = (normalsedDistance < 0) ? 0 : normalsedDistance;
             normalsedDistance = (normalsedDistance > 1) ? 1 : normalsedDistance;
+
             int colourSize = Mathf.RoundToInt(Mathf.Lerp(markerMinSize, markerMaxSize, normalsedDistance));
             if (_touch.collider.transform.name == "TabletDrawable")
             {

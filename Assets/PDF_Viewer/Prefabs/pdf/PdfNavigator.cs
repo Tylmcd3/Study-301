@@ -1,4 +1,4 @@
-using Apitron.PDF.Rasterizer;
+/*using Apitron.PDF.Rasterizer;
 using Apitron.PDF.Rasterizer.Configuration;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.Collections;
 using Unity.Jobs;
+
+*/
 using UnityEngine;
 
 public class PdfNavigator : MonoBehaviour
 {
-
+/*
     const int MAX_RES = 2048;
 
     string path;
@@ -76,4 +78,5 @@ public class PdfNavigator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A)) LastPage();
         pageTurnSemaphore = false;
     }
+*/
 }
