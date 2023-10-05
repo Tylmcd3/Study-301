@@ -23,6 +23,15 @@ public class pdfStorage : MonoBehaviour
         public List<Texture2D> Pages;
         public List<string> PageName;
     }
+    public struct DocumentTransfer
+    {
+        public List<Texture2D> texs;
+    }
+    public struct Document
+    {
+        public string Name;
+        public List<Page> PageCol;
+    }
     // Start is called before the first frame update
     private List<Document> docs;
     private Document activeDocument;
