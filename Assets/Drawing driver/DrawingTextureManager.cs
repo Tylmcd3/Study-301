@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-
+using static pdfStorage;
 
 [Elixir]
 public class DrawingTextureManager : MonoBehaviour
@@ -44,8 +44,10 @@ public class DrawingTextureManager : MonoBehaviour
     }
     void Awake()
     {
+        isWhiteboard = true;
         _sharedMaterials = new List<Material>();
         _whiteboardPages = new List<Texture2D>();
+        _pdfPages = new List<Texture2D>();
 
         CreateNewSlide();
     }
@@ -173,25 +175,32 @@ public class DrawingTextureManager : MonoBehaviour
             Debug.Log("PDF Exporting is not yet implemented");
     }
 
-    public void LoadPDFIntoManager(bool showPDF) {
-        List<Texture2D> pdf = GetComponent<pdfStorage>().getPDF();
-
-        if (pdf != null)
+    public void LoadPDFIntoManager(bool showPDF)
+    {
+        DocumentTransfer doct = GetComponent<pdfStorage>().getActiveDocument();
+        if (doct.texs.Count > 0)
         {
-            _pdfPages = pdf;
+            _pdfPages = doct.texs;
             _pdfIndex = 0;
             isWhiteboard = !showPDF;
             UpdateSharedTexture();
         }
 
     }
-    public void ToggleDisplay()
+    public void ToggleDisplay(bool showPDF = false)
     {
         if(_pdfPages.Count <= 0)
         {
             LoadPDFIntoManager(false);
         }
-        isWhiteboard = !isWhiteboard;
+        if (showPDF)
+        {
+            isWhiteboard = false;
+        }
+        else
+        {
+            isWhiteboard = !isWhiteboard;
+        }
         UpdateSharedTexture();
     }
 

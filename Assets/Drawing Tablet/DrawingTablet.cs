@@ -24,7 +24,7 @@ public class DrawingTablet : MonoBehaviour
     public Vector2 DrawingPadViewLastPos;
     public Rect ScreenView;
     public float DrawingPadScale;
-    private Vector2 TexSize;
+    private Vector2Int TexSize;
     private Rect lastGuideDraw;
     public KeyCode[] debugMoveKeys;
     public float debugMoveDist;
@@ -32,38 +32,21 @@ public class DrawingTablet : MonoBehaviour
     {
         return _drawingDriver.whiteboardSize;
     }
-
-    public void Draw(int x, int y, int colourSize, Vector2 _lastTouchPos, Color _colour)
+    public void updateDrawingGuide()
     {
-        _drawingDriver.Draw(x, y, colourSize, _lastTouchPos, _colour);
-    }
-    public void Erase(int x, int y, int sizeX, int sizeY, Vector2 _lastTouchPos)
-    {
-        _drawingDriver.Erase(x, y, sizeX, sizeX, _lastTouchPos);
-    }
-    private Rect CalculateBoundingBox(Rect rectA, Rect rectB)
-    {
-        int minX = (int)Mathf.Min(rectA.xMin, rectB.xMin);
-        int minY = (int)Mathf.Min(rectA.yMin, rectB.yMin);
-        int maxX = (int)Mathf.Max(rectA.xMax, rectB.xMax);
-        int maxY = (int)Mathf.Max(rectA.yMax, rectB.yMax);
-
-        int width = maxX - minX;
-        int height = maxY - minY;
-
-        return new Rect(minX, minY, width, height);
-    }
-    void updateDrawingGuide()
-    {
+        Texture2D tempTex = DrawingGuideTex;
+        DrawingPadView.x = (DrawingPadView.x < 0) ? 0 : (DrawingPadView.x > 1 - DrawingPadView.width) ? 1 - DrawingPadView.width : DrawingPadView.x;
+        DrawingPadView.y = (DrawingPadView.y < 0) ? 0 : (DrawingPadView.y > 1 - DrawingPadView.height) ? 1 - DrawingPadView.height : DrawingPadView.y;
         Rect curr = new Rect((int)(TexSize.x * DrawingPadView.x), (int)(TexSize.y * DrawingPadView.y), (int)(TexSize.x * DrawingPadView.width), (int)(TexSize.y * DrawingPadView.height));
-
-        Rect change = CalculateBoundingBox(curr, lastGuideDraw);
 
         Color _color = Color.blue;
         _color.a = .6f;
 
         var _colours = Enumerable.Repeat(_color, (int)(curr.width * curr.height)).ToArray();
+        var _clear = Enumerable.Repeat(Color.clear, (int)(lastGuideDraw.width * lastGuideDraw.height)).ToArray();
 
+        // Im sure this is super intensive
+        DrawingGuideTex.SetPixels((int)lastGuideDraw.x, (int)lastGuideDraw.y, (int)lastGuideDraw.width, (int)lastGuideDraw.height, _clear);
         DrawingGuideTex.SetPixels((int)curr.x, (int)curr.y, (int)curr.width, (int)curr.height, _colours);
         DrawingGuideTex.Apply();
         lastGuideDraw = curr;
@@ -71,8 +54,8 @@ public class DrawingTablet : MonoBehaviour
 
     private Material SetupDrawingGuide()
     {
-        DrawingGuideTex = new Texture2D((int)TexSize.x, (int)TexSize.y);
-        var _colours = Enumerable.Repeat(new Color(0, 0, 0, 0), (int)(TexSize.x * TexSize.y)).ToArray();
+        DrawingGuideTex = new Texture2D(TexSize.x, TexSize.y);
+        var _colours = Enumerable.Repeat(new Color(0, 0, 0, 0), (TexSize.x * TexSize.y)).ToArray();
         Material _displayOverlay = new Material(TransparentMat);
 
         DrawingGuideTex.SetPixels(_colours);
@@ -80,12 +63,7 @@ public class DrawingTablet : MonoBehaviour
         _displayOverlay.SetTexture("_BaseMap", DrawingGuideTex);
         return _displayOverlay;
     }
-    void Update()
-    {
-        //MelonLoader.MelonLogger.Msg(System.ConsoleColor.Green, _drawingPadRen.material.name);   
-    }
-
-    private void updateDrawingView()
+    public void updateDrawingView()
     {
         _drawingPadRen.material.mainTextureOffset = new Vector2(DrawingPadView.x, DrawingPadView.y);
         _drawingPadRen.material.mainTextureScale = new Vector2(DrawingPadView.width, DrawingPadView.height);
