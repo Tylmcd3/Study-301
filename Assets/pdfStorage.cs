@@ -9,7 +9,7 @@ using UnityEngine;
 [Elixir]
 public class pdfStorage : MonoBehaviour
 {
-    public GameObject DocumentPrefab; 
+    public GameObject DocumentPrefab;
     public GameObject DocumentMenu;
     public int posY = 125;
     public int minPosY = -215;
@@ -21,21 +21,27 @@ public class pdfStorage : MonoBehaviour
     {
         public string Name;
         public List<Texture2D> Pages;
+
         public List<string> PageName;
     }
     // Start is called before the first frame update
+    public List<Texture2D> doc1Pages;
+    public List<Texture2D> doc2Pages;
+    public List<Texture2D> doc3Pages;
+    public List<Texture2D> doc4Pages;
+    public List<Texture2D> doc5Pages;
     private List<Document> docs;
     private Document activeDocument;
 
     Vector2Int pageDimensions;
     void Start()
     {
-        
+
         pageDimensions = GetComponent<DrawingTextureManager>().whiteboardSize;
         string documentsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         string pdfFolder = documentsFolderPath + "\\Bonelab\\Documents";
-        docs = new List<Document>();
 
+        /*
         if (Directory.Exists(pdfFolder))
         {
             string[] subdirectories = Directory.GetDirectories(pdfFolder);
@@ -48,7 +54,19 @@ public class pdfStorage : MonoBehaviour
         else
         {
             Directory.CreateDirectory(pdfFolder);
-        }
+        }*/
+        docs = new List<Document>();
+        docs.Add(new Document { Name = "Book 6-1 PDM Unit Test", Pages = doc1Pages, PageName = new List<string>() });
+        createUIDocument(docs[0]);
+        activeDocument = docs[0];
+        docs.Add(new Document { Name = "Free_Test_Data", Pages = doc2Pages, PageName = new List<string>()});
+        createUIDocument(docs[1]);
+        docs.Add(new Document { Name = "Presentation(2)", Pages = doc3Pages, PageName = new List<string>() });
+        createUIDocument(docs[2]);
+        docs.Add(new Document { Name = "s3845390_1", Pages = doc4Pages, PageName = new List<string>() });
+        createUIDocument(docs[3]);
+        docs.Add(new Document { Name = "sample-pdf-file", Pages = doc5Pages, PageName = new List<string>() });
+        createUIDocument(docs[4]);
 
     }
     private void LoadDocument(string dir)
@@ -74,7 +92,7 @@ public class pdfStorage : MonoBehaviour
         }
 
         docs.Add(doc);
-        createUIDocument(doc);
+        
     }
     private void createUIDocument(Document doc)
     {
@@ -86,6 +104,7 @@ public class pdfStorage : MonoBehaviour
             UI.transform.parent = DocumentMenu.transform;
             UI.transform.localPosition = new Vector3(215, posY, 1);
             UI.transform.localScale = Vector3.one;
+            UI.transform.localRotation = Quaternion.Euler(Vector3.zero);
 
             posY -= 50;
             buttonCollision col = UI.GetComponent<buttonCollision>();
@@ -93,6 +112,7 @@ public class pdfStorage : MonoBehaviour
             col.DocumentGroup = DocumentMenu;
             col.manager = this.gameObject;
             col.toggleGroup = true;
+            
 
             UI.GetComponentInChildren<TMP_Text>().text = doc.Name;
         }
@@ -124,7 +144,8 @@ public class pdfStorage : MonoBehaviour
 
     public void setActiveDocument(string docName)
     {
-        foreach(Document doc in docs)
+
+        foreach (Document doc in docs)
         {
             if(doc.Name == docName)
             {
@@ -136,8 +157,11 @@ public class pdfStorage : MonoBehaviour
 
     public DocumentTransfer getActiveDocument()
     {
+
+
         DocumentTransfer doct = new DocumentTransfer();
         doct.texs = activeDocument.Pages;
+
         return doct;
 
     }

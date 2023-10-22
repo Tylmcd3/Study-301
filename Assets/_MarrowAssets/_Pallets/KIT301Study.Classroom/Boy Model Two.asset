@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26284165bbf1b94dbe4934acd6c0f71, type: 3}
+  m_Name: Boy Model Two
+  m_EditorClassIdentifier: 
+  _barcode:
+    _id: KIT301Study.Classroom.Avatar.BoyModelTwo
+    generated: 1
+  _barcodeOld:
+    _id: null.empty.barcode
+    generated: 0
+  _slimCode:
+    _byteArray: 
+  _title: Boy Model Two
+  _description: 
+  _unlockable: 0
+  _redacted: 0
+  _pallet: {fileID: 11400000, guid: 60d78c4aabf4a7e40ab02538939ab1a1, type: 2}
+  _tags: []
+  _mainAsset:
+    _assetGUID: bc29b5c2adc3d7d4b96d0e9975c49b69
+    _editorAssetChanged: 0
+  _previewMesh:
+    _assetGUID: 7a613bc1457f57a4dba865216a3fc251
+    _editorAssetChanged: 1
+  _customQuality: 0
+  _previewMeshQuality: 0.5
+  _maxLODLevel: 0
+  _colliderBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}

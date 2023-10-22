@@ -21,7 +21,7 @@ MonoBehaviour:
   _slimCode:
     _byteArray: 
   _title: Classroom
-  _description: 
+  _description: asdf
   _unlockable: 0
   _redacted: 0
   _author: KIT301Study
@@ -31,8 +31,20 @@ MonoBehaviour:
   _crates:
   - {fileID: 11400000, guid: 575cc7c6aef2f5440bb6ba1c949f0cec, type: 2}
   - {fileID: 11400000, guid: 43b1017932649754a8a23926b0a4cda5, type: 2}
+  - {fileID: 11400000, guid: 3a5a61f9c6cedd3448664bedc9650008, type: 2}
+  - {fileID: 11400000, guid: c5584494fac2d094d96e76239441517b, type: 2}
+  - {fileID: 11400000, guid: a380ab249ab0fd740af4468a353bc1cb, type: 2}
+  - {fileID: 11400000, guid: 86fb6693f872d564597f8a17007c828d, type: 2}
+  - {fileID: 11400000, guid: 0bf303fa7a2e27645a0d39988a679f07, type: 2}
+  - {fileID: 11400000, guid: e8afbb9eafaf9f04abb640adfed6c4e7, type: 2}
   _tags: []
   _changeLogs: []
   _crateTitles:
   - Classroom
   - Flask Label Classroom
+  - Boy Model One
+  - Boy Model Two
+  - Boy Model Three
+  - Girl Model One
+  - Girl Model Two
+  - Girl Model Three

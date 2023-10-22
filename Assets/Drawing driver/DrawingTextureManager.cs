@@ -51,6 +51,7 @@ public class DrawingTextureManager : MonoBehaviour
 
         CreateNewSlide();
     }
+    public Vector2Int getTextureSize() { return new Vector2Int(_activeTexture.width, _activeTexture.height); }
 
     // Start is called before the first frame update
     void Start()
@@ -62,6 +63,7 @@ public class DrawingTextureManager : MonoBehaviour
     public int GetPageIndex() { return (isWhiteboard) ? _whiteboardIndex : _pdfIndex; }
     public Material CreateSharedMaterial()
     {
+        //MelonLoader.MelonLogger.Msg("CreateSharedMaterial");
         Material newMat = new Material(baseMaterial);
         newMat.mainTexture = _activeTexture;
         _sharedMaterials.Add(newMat);
@@ -71,20 +73,11 @@ public class DrawingTextureManager : MonoBehaviour
     }
     private void UpdateSharedTexture()
     {
-
         _activeTexture = (isWhiteboard) ? _whiteboardPages[_whiteboardIndex] : _pdfPages[_pdfIndex];
-        if (_sharedMaterials.Count > 0)
+        foreach (Material mat in _sharedMaterials)
         {
-
-
-            foreach (Material mat in _sharedMaterials)
-            {
-
-                mat.SetTexture("_BaseMap", _activeTexture);
-            }
+            mat.SetTexture("_BaseMap", _activeTexture);
         }
-        
-
     }
     public void CreateNewSlide(int index = -1)
     {
@@ -176,26 +169,33 @@ public class DrawingTextureManager : MonoBehaviour
                 pageCount++;
             }
         }
+
     }
 
     public void LoadPDFIntoManager(bool showPDF)
     {
+
+
         DocumentTransfer doct = GetComponent<pdfStorage>().getActiveDocument();
+
         if (doct.texs.Count > 0)
         {
             _pdfPages = doct.texs;
             _pdfIndex = 0;
             isWhiteboard = !showPDF;
+
             UpdateSharedTexture();
         }
 
     }
     public void ToggleDisplay(bool showPDF = false)
     {
-        if(_pdfPages.Count <= 0)
+
+        if (_pdfPages.Count <= 0)
         {
-            LoadPDFIntoManager(false);
+            LoadPDFIntoManager(showPDF);
         }
+
         if (showPDF)
         {
             isWhiteboard = false;
@@ -205,6 +205,8 @@ public class DrawingTextureManager : MonoBehaviour
             isWhiteboard = !isWhiteboard;
         }
         UpdateSharedTexture();
+
+
     }
 
 

@@ -1,24 +1,31 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using static DrawingTextureManager;
+
 [Elixir]
 public class buttonCollision : MonoBehaviour
 {
     public bool toggleGroup = false;
     public string document;
     public GameObject DocumentGroup;
-    public EventTrigger.TriggerEvent OnTriggerEnterEvent;
     public GameObject manager;
+    private ButtonPressTimer timer;
+
     void OnTriggerEnter(Collider other)
     {
+        if (!timer.CheckTime())
+        {
+            return;
+        }
         if (toggleGroup)
         {
             pdfStorage storage = manager.GetComponent<pdfStorage>();
-            MelonLoader.MelonLogger.Msg(document);
+
 
             GetComponent<Image>().color = new Color(183, 183, 183, 255);
 
-            foreach (Transform obj in DocumentGroup.GetComponentInChildren<Transform>())
+            foreach (Transform obj in DocumentGroup.GetComponentsInChildren<Transform>())
             {
                 if (obj.name.Contains("DocumentButton") && obj.name != this.name)
                 {
@@ -26,16 +33,41 @@ public class buttonCollision : MonoBehaviour
 
                 }
             }
+
             storage.setActiveDocument(document);
         }
         else
         {
-            BaseEventData eventData = new BaseEventData(EventSystem.current);
-            eventData.selectedObject = this.gameObject;
-            OnTriggerEnterEvent.Invoke(eventData);
+            DrawingTextureManager texMan = manager.GetComponent<DrawingTextureManager>();
+
+            switch (document)
+            {
+                case "new page":
+                    texMan.CreateNewSlide();
+                    break;
+                case "toggle page":
+                    texMan.ToggleDisplay();
+                    break;
+                case "page left":
+                    texMan.MoveSlide(SlideChange.left);
+                    break;
+                case "page right":
+                    texMan.MoveSlide(SlideChange.right);
+                    break;
+                case "delete page":
+                    texMan.DeleteCurrentSlide();
+                    break;
+                case "export page":
+                    texMan.ExportTextures();
+                    break;
+
+            }
         }
-
-
         
+    }
+
+    private void Start()
+    {
+        timer = GetComponentInParent<ButtonPressTimer>();
     }
 }

@@ -12,4 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5a52cb3bad3437c9362b8e7e9cd9423, type: 3}
   m_Name: TextureStreamSettings
   m_EditorClassIdentifier: 
-  textureStreamingPreventionGuidsList: []
+  textureStreamingPreventionGuidsList:
+  - d02e07e2cd1638c48b44a30cbc5c0f45
+  - 6875b44d6dac2d6438b30ae5a871f064
+  - 75069ee1463def24dbdf9bbad0e61336
+  - d5be6ec3591e7e1488bd98bd65987e7e
+  - 1cd63636e5a2c744d9064c04bc9d1853
+  - 0481ab7f8f144a345b94d27f608699e3
+  - 70aa73abe4dccbf46842c2b1b5d613fc
+  - 7d1da52579f8f544d988f7de19d0de49
+  - 69cb2888eedf57342b22a6a70c7abaa6
+  - 44f0dcfb2eefe554686390f4c37b25e1
+  - 835449cb10830714f8210bbd518292e2
+  - a46a984ae660aa04b9598843047ea88d
+  - 29ed88af4cb6c6f4a8c33076419e526f
+  - a381c8acff2907946b0c83512861914d
+  - af6984f51485d7349942872c3172c68d
+  - befa91b42fc86be4bbfbdd408daa296b

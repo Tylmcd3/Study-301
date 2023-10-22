@@ -28,6 +28,8 @@ public class DrawingTablet : MonoBehaviour
     private Rect lastGuideDraw;
     public KeyCode[] debugMoveKeys;
     public float debugMoveDist;
+
+    private Material DrawingScreenMat;
     public Vector2 getTexSize()
     {
         return _drawingDriver.whiteboardSize;
@@ -65,8 +67,8 @@ public class DrawingTablet : MonoBehaviour
     }
     public void updateDrawingView()
     {
-        _drawingPadRen.material.mainTextureOffset = new Vector2(DrawingPadView.x, DrawingPadView.y);
-        _drawingPadRen.material.mainTextureScale = new Vector2(DrawingPadView.width, DrawingPadView.height);
+        DrawingScreenMat.mainTextureOffset = new Vector2(DrawingPadView.x, DrawingPadView.y);
+        DrawingScreenMat.mainTextureScale = new Vector2(DrawingPadView.width, DrawingPadView.height);
 
         DrawingPadViewLastPos = DrawingPadView.position;
     }
@@ -93,12 +95,12 @@ public class DrawingTablet : MonoBehaviour
 
         _displayRen.materials = new Material[] { _drawingDriver.CreateSharedMaterial(), DrawingGuideMat };
         updateDrawingGuide();
-        var m = _drawingDriver.CreateSharedMaterial();
+        DrawingScreenMat = _drawingDriver.CreateSharedMaterial();
 
-        m.mainTextureOffset = new Vector2(DrawingPadView.x, DrawingPadView.y);
-        m.mainTextureScale = new Vector2(DrawingPadView.width, DrawingPadView.height);
-        _drawingPadRen.material = m;
+        DrawingScreenMat.mainTextureOffset = new Vector2(DrawingPadView.x, DrawingPadView.y);
+        DrawingScreenMat.mainTextureScale = new Vector2(DrawingPadView.width, DrawingPadView.height);
 
+        _drawingPadRen.material = DrawingScreenMat;
     }
 
 

@@ -37,9 +37,10 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
         _markerBuilder = GetComponent<MarkerBuilder>();
         _markerBuilder.GeneratePenTip(Tip, Colour);
         _markerBuilder.GenerateDepthWand(Tip, Wand, Colour);
+
     }
     void Update(){
-        Draw(); 
+        Draw();
     }
     void SetColour(Color colour)
     {
@@ -51,7 +52,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
     {
         if (Physics.Raycast(Wand.position, transform.up, out _touch, _markerBuilder.beamLength / 2)) //beamLength is 1/2 because The Mesh size is halved
         {
-            Vector2 texSize = _drawingDriver.whiteboardSize;
+            Vector2 texSize = _drawingDriver.getTextureSize();
             if (_touch.collider.transform.name.Contains("Drawable"))
             {
                 float normalsedDistance = 1 - ((_touch.distance * 2) / _markerBuilder.beamLength);
@@ -118,7 +119,7 @@ public class MarkerTouchingDrawableSurface : MonoBehaviour
     Vector2Int getDrawingCoords(int colourSize)
     {
         Vector2Int coords = new Vector2Int(-1, -1);
-        Vector2 texSize = _drawingDriver.whiteboardSize;
+        Vector2 texSize = _drawingDriver.getTextureSize();
 
         if (_touch.collider.transform.name == "DrawableTablet")
         {
